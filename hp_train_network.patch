@@ -1,0 +1,61 @@
+From 8c8c7e03128bca95a77bb797a279daa9f3e3fb86 Mon Sep 17 00:00:00 2001
+From: Bruno Stefoni <bruno.stefoni@cloudwerx.tech>
+Date: Tue, 06 Feb 2024 19:16:44 -0500
+Subject: [PATCH] hp train_network
+
+---
+ train_network.py | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/train_network.py b/train_network.py
+index a75299c..72edf22 100644
+--- a/train_network.py
++++ b/train_network.py
+@@ -46,7 +46,8 @@ from library.custom_train_functions import (
+     add_v_prediction_like_loss,
+     apply_debiased_estimation,
+ )
+-
++import hypertune
++hpt = hypertune.HyperTune()
+ 
+ class NetworkTrainer:
+     def __init__(self):
+@@ -55,9 +56,14 @@ class NetworkTrainer:
+ 
+     # TODO 他のスクリプトと共通化する
+     def generate_step_logs(
+-        self, args: argparse.Namespace, current_loss, avr_loss, lr_scheduler, keys_scaled=None, mean_norm=None, maximum_norm=None
++        self, args: argparse.Namespace, current_loss, avr_loss, lr_scheduler, step, keys_scaled=None, mean_norm=None, maximum_norm=None
+     ):
+         logs = {"loss/current": current_loss, "loss/average": avr_loss}
++        if args.hpo == "y":
++            hpt.report_hyperparameter_tuning_metric(
++                hyperparameter_metric_tag='avr_loss',
++                metric_value=avr_loss,
++                global_step=step)
+ 
+         if keys_scaled is not None:
+             logs["max_norm/keys_scaled"] = keys_scaled
+@@ -857,7 +863,7 @@ class NetworkTrainer:
+                     progress_bar.set_postfix(**{**max_mean_logs, **logs})
+ 
+                 if args.logging_dir is not None:
+-                    logs = self.generate_step_logs(args, current_loss, avr_loss, lr_scheduler, keys_scaled, mean_norm, maximum_norm)
++                    logs = self.generate_step_logs(args, current_loss, avr_loss, lr_scheduler, global_step, keys_scaled, mean_norm, maximum_norm)
+                     accelerator.log(logs, step=global_step)
+ 
+                 if global_step >= args.max_train_steps:
+@@ -955,6 +961,9 @@ def setup_parser() -> argparse.ArgumentParser:
+     parser.add_argument(
+         "--training_comment", type=str, default=None, help="arbitrary comment string stored in metadata / メタデータに記録する任意のコメント文字列"
+     )
++    parser.add_argument(
++        "--hpo", type=str, default="y", help="if using hyper parameter tuning"
++    )
+     parser.add_argument(
+         "--dim_from_weights",
+         action="store_true",
+-- 
+2.39.3 (Apple Git-145)
+
