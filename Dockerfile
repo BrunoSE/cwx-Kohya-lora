@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# Edited by Bruno Stefoni bruno.stefoni@cloudwerx.tech
 
 FROM gcr.io/deeplearning-platform-release/base-gpu.py310
 

@@ -42,7 +42,7 @@ gcloud ai custom-jobs create  \
 #creat hp-tuning job
 gcloud ai hp-tuning-jobs create  \
    --region=us-central1 \
-   --display-name=sd-kohya-hpo \
-   --max-trial-count=5 \
-   --parallel-trial-count=2 \
-   --config=vertex-config-hpo.yaml
+   --display-name=sd-kohya-hyp \
+   --max-trial-count=1 \
+   --parallel-trial-count=1 \
+   --config=vertex-ai-config-hpo.yaml
