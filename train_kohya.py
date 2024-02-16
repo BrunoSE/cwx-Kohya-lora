@@ -194,18 +194,19 @@ def main(args):
     print(f"Found model files: {model_files}")
 
 
-    # generate test prompt images and save to gcs folder
-    for model_file in model_files:
-        print(f"Generating images with model {model_file} for test inspection..")
-        pipeline = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
-        pipeline.load_lora_weights(f'{OUTPUT_DIR}/{model_file}', weight_name=model_file)
+    if PROMPT_1:
+        for model_file in model_files:
+            print(f"Generating images with model {model_file} for test inspection..")
+            pipeline = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
+            pipeline.load_lora_weights(f'{OUTPUT_DIR}/{model_file}', weight_name=model_file)
 
-        # go over prompts
-        image1 = pipeline(PROMPT_1).images[0]
-        print("Saving images..")
-        image1.save(f"{OUTPUT_DIR}/image1.png")
+            # go over prompts
+            model_file_ = model_file.replace(".safetensors",'')
+            image1 = pipeline(PROMPT_1).images[0]
+            print("Saving images..")
+            image1.save(f"{OUTPUT_DIR}/{model_file_}_img_1.png")
 
-        pipeline = None
+            pipeline = None
 
     # idea: save image outputs to nfs for easier inspection ?
 
