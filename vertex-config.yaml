@@ -14,9 +14,57 @@
 
 workerPoolSpecs:
   machineSpec:
-    machineType: n1-standard-8
-    acceleratorType: NVIDIA_TESLA_T4
-    acceleratorCount: 2
+    machineType: a2-highgpu-1g
+    acceleratorType: NVIDIA_TESLA_A100
+    acceleratorCount: 1
   replicaCount: 1
   containerSpec:
-    imageUri: us-east1-docker.pkg.dev/bruno-cw-internal/ar-2/sd-training2:kohya
+    imageUri: us-east1-docker.pkg.dev/cloudwerx-sandbox/ar-2/sd-training2:kohya
+    args: ["--experiment_tag", "tag1",
+          "--method","kohya_lora",
+          "--pretrained_model_name_or_path", "stabilityai/stable-diffusion-xl-base-1.0",
+          "--input_storage", "/gcs/ydz-bucket-2/input",
+          "--output_storage", "/gcs/ydz-bucket-2/output",
+          "--display_name", "ydz_backyard",
+          "--num_cpu_threads", "12",
+          "--enable_bucket", "True",
+          "--resolution", "768,768",
+          "--network_module", "networks.lora",
+          "--max_train_epochs", "4",
+          "--lr", "0.0001",
+          "--unet_lr", "0.0001",
+          "--text_encoder_lr", "0",
+          "--optimizer_type", "Adafactor",
+          "--lr_scheduler", "constant",
+          "--lr_warmup_steps", "0",
+          "--lr_scheduler_num_cycles", "1",
+          "--network_dim", "8",
+          "--network_alpha", "1",
+          "--batch_size", "1",
+          "--save_every_n_epochs", "2",
+          "--mixed_precision", "bf16",
+          "--save_precision", "bf16",
+          "--seed", "42",
+          "--cache_latents", "True",
+          "--clip_skip", "0",
+          "--reg_dir", "",
+          "--use_8bit_adam", "False",
+          "--use_lion", "False",
+          "--prior_loss_weight", "1.0",
+          "--max_token_length", "225",
+          "--caption_extension", ".txt",
+          "--save_model_as", "safetensors",
+          "--min_bucket_reso", "256",
+          "--max_bucket_reso", "2028",
+          "--keep_tokens", "0",
+          "--xformers", "True",
+          "--noise_offset", "0",
+          "--no_half_vae", "True",
+          "--optimizer_args", "scale_parameter=False relative_step=False warmup_init=False",
+          "--max_data_loader_n_workers", "0",
+          "--network_train_unet_only", "True",
+          "--full_bf16", "True",
+          "--hpo", "y",
+          "--my_prompt_1","modern house with a backyard with a firepit, modern style architecture"]
+
+    command: ["python3","train_kohya.py"]

@@ -19,7 +19,7 @@ RUN apt-get update
 
 WORKDIR /root
 
-#install sd libraries
+#install sd kohya libraries
 RUN git clone https://github.com/Akegarasu/lora-scripts --recurse-submodules --branch main --single-branch
 
 WORKDIR lora-scripts
@@ -57,6 +57,7 @@ RUN pip install cloudml-hypertune==0.1.0.dev6
 COPY train_kohya.py /root/train_kohya.py
 COPY hp_train_network.patch /tmp/hp_train_network.patch
 
+# patch to track loss when hyperparameter tuning
 WORKDIR lora-scripts/sd-scripts
 RUN git apply /tmp/hp_train_network.patch
 WORKDIR /root

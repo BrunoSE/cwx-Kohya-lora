@@ -12,9 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# cloud build image
+# -------------------
+#
+# These are cloud shell useful commands
+
+# ---
+# If first time trying this in a GCP project, before building image, we need to create repo in artifact registry:
+# set name of repo
+BUILD_REGIST=ar-2                                             
+
+# we arbitrarily chose us-east1
+gcloud artifacts repositories create ${BUILD_REGIST} --repository-format=docker \
+--location=us-east1
+
+gcloud auth configure-docker us-east1-docker.pkg.dev
+
+# ---
+# Cloud build image, each time you want to redo the docker image (i.e. when modifying the python script or Dockerfile)
 gcloud builds submit --config cloud-build-config-kohya.yaml .
 
+
+# ---
 # create vertex ai customer training job
 # args format:
 # --model_name: Huggingface repo id, or "/gcs/bucket_name/model_folder". I only test the models downloaded from HF, with standard diffusers format. Safetensors has not been test.
@@ -24,17 +42,17 @@ gcloud builds submit --config cloud-build-config-kohya.yaml .
 # --output_storage: /gcs/bucket_name/output_folder
 # --display_name: prompt name
 # input_storage, output_storage, and display_name are required, other arguments are optional.
+
 gcloud ai custom-jobs create  \
-  --region=us-east1   \
+  --region=us-central1   \
   --display-name=sd-kohya   \
-  --config=vertex-config-nfs.yaml   \
-  --args="--method=kohya_lora,--model_name=CompVis/stable-diffusion-v1-4,--input_storage=/gcs/sd/input_dog_kohya,--output_storage=/gcs/sd/kohya_output,--display_name=sks_dog,--save_nfs=True" \
+  --config=vertex-config.yaml   \
   --command="python3,train_kohya.py"
 
 # only save the models in GCS to Filestore
 gcloud ai custom-jobs create  \
   --region=us-central1   \
-  --display-name=sd-kohya   \
+  --display-name=sd-kohya-nfs   \
   --config=vertex-config-nfs.yaml   \
   --args="--output_storage=/gcs/sd/kohya_output,--save_nfs_only=True" \
   --command="python3,train_kohya.py"

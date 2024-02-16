@@ -14,9 +14,9 @@
 
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-f', 'Dockerfile', '-t', 'us-east1-docker.pkg.dev/bruno-cw-internal/ar-2/sd-training2:kohya', '.' ]
+  args: [ 'build', '-f', 'Dockerfile', '-t', 'us-east1-docker.pkg.dev/cloudwerx-sandbox/ar-2/sd-training2:kohya', '.' ]
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-east1-docker.pkg.dev/bruno-cw-internal/ar-2/sd-training2:kohya']
+  args: ['push', 'us-east1-docker.pkg.dev/cloudwerx-sandbox/ar-2/sd-training2:kohya']
 options:
   machineType: 'N1_HIGHCPU_8'
   diskSizeGb: '200'

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT USE
+
 network: projects/PROJECT_NUMBER/global/networks/VPC_NETWORK_NAME
 workerPoolSpecs:
   machineSpec:

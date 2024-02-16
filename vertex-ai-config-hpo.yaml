@@ -32,12 +32,12 @@ trialJobSpec:
         acceleratorCount: 1
       replicaCount: 1
       containerSpec:
-        imageUri: us-east1-docker.pkg.dev/bruno-cw-internal/ar-2/sd-training2:kohya
+        imageUri: us-east1-docker.pkg.dev/cloudwerx-sandbox/ar-2/sd-training2:kohya
         args: ["--experiment_tag", "tag1",
               "--method","kohya_lora",
               "--pretrained_model_name_or_path", "stabilityai/stable-diffusion-xl-base-1.0",
-              "--input_storage", "/gcs/ydz-bucket-1/input",
-              "--output_storage", "/gcs/ydz-bucket-1/output",
+              "--input_storage", "/gcs/ydz-bucket-2/input",
+              "--output_storage", "/gcs/ydz-bucket-2/output",
               "--display_name", "ydz_backyard",
               "--num_cpu_threads", "12",
               "--enable_bucket", "True",
